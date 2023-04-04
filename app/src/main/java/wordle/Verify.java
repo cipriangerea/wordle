@@ -6,7 +6,16 @@ public class Verify {
     }
 
     public static MatchType[] verify(char[] input, char[] word, int len) {
+        if (len > input.length) {
+            throw new IllegalArgumentException("len must be greater than input.length");
+        }
+
+        if (input.length != word.length) {
+            throw new IllegalArgumentException("input and word must be the same length");
+        }
+
         assert (len <= input.length);
+        assert (word.length == input.length);
         MatchType[] result = new MatchType[input.length];
         for (int i = 0; i < len; i++) {
             result[i] = MatchType.Missing;

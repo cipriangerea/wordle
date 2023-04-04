@@ -2,6 +2,7 @@ package wordle;
 
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.fail;
 
 import org.junit.jupiter.api.Test;
 
@@ -21,14 +22,27 @@ public class VerifyTest {
             new MatchType[] { MatchType.Exact, MatchType.Exact, MatchType.Exact, MatchType.Exact, MatchType.Exact });   
 
         // test case with 5 letter word and 3 letter input
-        testVerifyHelper("abc", "abcde", 
-            new MatchType[] { MatchType.Exact, MatchType.Exact, MatchType.Exact });
+        testVerifyHelperIllegalArgumentException("abc", "abcde");
+
+        // test case with 3 letter word and 5 letter input
+        testVerifyHelperIllegalArgumentException("abcde", "abc");   
     }
 
     private void testVerifyHelper(String input, String word, MatchType[] expected) {
         MatchType[] actual = Verify.verify(input.toCharArray(), word.toCharArray());
         assertArrayEquals(expected, actual);
     }
+
+    // test verify helper for IllegalArgumentException
+    private void testVerifyHelperIllegalArgumentException(String input, String word) {
+        try {
+            Verify.verify(input.toCharArray(), word.toCharArray());
+            fail("IllegalArgumentException expected");
+        } catch (IllegalArgumentException e) {
+            return;
+        }
+    }
+
     
     // test isFinalSolution
     @Test public void testIsFinalSolution() {
