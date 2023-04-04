@@ -16,35 +16,36 @@ public class Main {
 //        printSolution("steal", "homer");
 //        printSolution("stare", "spill");
 
-        String startWord = "stare";
-//        printReport(Scorer.score(Solver.makeNaiveSolver(), startWord), "Naive");
-//        printReport(Scorer.score(Solver.makeLetterCountSolver(), startWord), "LetterCount");
-//        printReport(Scorer.score(Solver.makeWordCountSolver(), startWord), "WordCount");
-//        printReport(Scorer.score(Solver.makeTurboSolver(), startWord), "WordCount");
+    //     String startWord = "stare";
+    //    printReport(Scorer.score(Solver.makeNaiveSolver(), startWord), "Naive");
+    //    printReport(Scorer.score(Solver.makeLetterCountSolver(), startWord), "LetterCount");
+    //    printReport(Scorer.score(Solver.makeWordCountSolver(), startWord), "WordCount");
+    //    printReport(Scorer.score(Solver.makeTurboSolver(), startWord), "WordCount");
 
         solveInteractive();
     }
 
     private static void solveInteractive() throws IOException {
-        Scanner scanner = new Scanner(System.in);
-        SolverSession session = new SolverSession(5);
-        while (true) {
-            System.out.println(session.getCandidatesList(10));
+        try (Scanner scanner = new Scanner(System.in)) {
+            SolverSession session = new SolverSession(5);
+            while (true) {
+                System.out.println(session.getCandidatesList(10));
 
-            System.out.println("Input word");
-            String input = scanner.nextLine();
-            System.out.println("Input score");
-            String score = scanner.nextLine();
-            Verify.MatchType[] scoreMt = Arrays.stream(score.split(","))
-                    .map(s -> Verify.MatchType.valueOf(s))
-                    .toArray(Verify.MatchType[]::new);
+                System.out.println("Input word");
+                String input = scanner.nextLine();
+                System.out.println("Input score");
+                String score = scanner.nextLine();
+                Verify.MatchType[] scoreMt = Arrays.stream(score.split(","))
+                        .map(s -> Verify.MatchType.valueOf(s))
+                        .toArray(Verify.MatchType[]::new);
 
-            if (Verify.isFinalSolution(scoreMt)) {
-                System.out.println("My work is done! Such satisfaction!");
-                System.exit(0);
+                if (Verify.isFinalSolution(scoreMt)) {
+                    System.out.println("My work is done! Such satisfaction!");
+                    System.exit(0);
+                }
+
+                session.updateMatchMatrix(input.toCharArray(), scoreMt);
             }
-
-            session.updateMatchMatrix(input.toCharArray(), scoreMt);
         }
     }
 
@@ -87,10 +88,8 @@ public class Main {
     }
 
     public static void printMatch(String start, String end) {
-        Verify v = new Verify();
-
         System.out.println(String.format("Start=%s, End=%s, Match=%s", start, end,
-                Arrays.stream(v.verify(start.toCharArray(), end.toCharArray()))
+                Arrays.stream(Verify.verify(start.toCharArray(), end.toCharArray()))
                         .map(Verify.MatchType::toString)
                         .collect(Collectors.joining(", "))));
     }

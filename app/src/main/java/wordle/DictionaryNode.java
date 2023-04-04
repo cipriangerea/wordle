@@ -56,7 +56,7 @@ public class DictionaryNode {
             root.subtreeSize = 1;
         } else {
             root.subtreeSize = Arrays.stream(root.getLinks())
-                    .map(n -> n != null ? updateSubtreeSize(n) : 0).reduce(0, Integer::sum) + 1;
+                    .map(n -> n != null ? updateSubtreeSize(n) : 0).reduce(0, (t, u) -> Integer.sum(t, u)) + 1;
         }
         return root.subtreeSize;
     }
